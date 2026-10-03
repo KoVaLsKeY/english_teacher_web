@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Elegant one-page portfolio website for an English teacher.">
+  <meta name="theme-color" content="#f4f1eb">
+  <title>English Teacher — B2</title>
+  <link rel="preload" href="assets/images/teacher-placeholder.svg" as="image">
+  <link rel="stylesheet" href="css/style.css">
+  <noscript><style>
+    .menu-toggle { display: none; }
+    .site-header { position: relative; top: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; border-radius: 24px; }
+    .desktop-nav { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero { padding-top: 80px; }
+  </style></noscript>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="cursor cursor-dot" aria-hidden="true"></div>
+  <div class="cursor cursor-ring" aria-hidden="true"></div>
+
+  <header class="site-header" data-cursor-theme="light" id="top">
+    <a class="brand magnetic-target" href="#top" aria-label="Teacher home">TEACH / B2</a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a class="nav-link magnetic-target" href="#about">About</a>
+      <a class="nav-link magnetic-target" href="#method">Method</a>
+      <a class="nav-link magnetic-target" href="#lessons">Lessons</a>
+      <a class="nav-link magnetic-target" href="#testimonials">Testimonials</a>
+      <a class="nav-link magnetic-target" href="#faq">FAQ</a>
+    </nav>
+
+    <a class="glass-cta magnetic-target" href="#contact">Book a lesson <span>↗</span></a>
+
+    <button class="menu-toggle magnetic-target" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-menu" aria-haspopup="dialog">
+      <span></span><span></span>
+    </button>
+
+  </header>
+
+  <dialog class="mobile-menu" id="mobile-menu" aria-labelledby="menu-title">
+    <div class="menu-heading">
+      <span id="menu-title" class="eyebrow">LET’S FIND YOUR PATH</span>
+      <button class="menu-close" type="button" aria-label="Close navigation">×</button>
+    </div>
+    <nav aria-label="Mobile navigation">
+      <a href="#about"><span>01</span> About <span aria-hidden="true">↗</span></a>
+      <a href="#method"><span>02</span> Method <span aria-hidden="true">↗</span></a>
+      <a href="#lessons"><span>03</span> Lessons <span aria-hidden="true">↗</span></a>
+      <a href="#testimonials"><span>04</span> Testimonials <span aria-hidden="true">↗</span></a>
+      <a href="#faq"><span>05</span> FAQ <span aria-hidden="true">↗</span></a>
+      <a class="menu-booking" href="#contact">Book a lesson <span aria-hidden="true">↗</span></a>
+    </nav>
+    <p class="menu-note">A little practice. A lot of possibility.</p>
+  </dialog>
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero section-shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">ENGLISH TEACHER / B2</p>
+        <h1 id="hero-title" class="display-title reveal">
+          Speak with<br>
+          <span>clarity.</span><br>
+          Learn with<br>
+          <span>confidence.</span>
+        </h1>
+        <div class="hero-bottom reveal">
+          <p class="hero-intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae justo sed neque porta tincidunt.</p>
+          <a class="text-link magnetic-target" href="#about">Discover the approach <span>↓</span></a>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="hero-orbit"></div>
+        <img id="teacherImage" data-image="teacherPortrait" src="assets/images/teacher-placeholder.svg" alt="English teacher portrait">
+        <div class="image-note">B2 / 01</div>
+      </div>
+    </section>
+
+    <section class="marquee-band" aria-label="Language, confidence, conversation, progress">
+      <div class="marquee-track" aria-hidden="true">
+        <span>LANGUAGE</span><span>CONFIDENCE</span><span>CONVERSATION</span><span>PROGRESS</span>
+        <span>LANGUAGE</span><span>CONFIDENCE</span><span>CONVERSATION</span><span>PROGRESS</span>
+      </div>
+    </section>
+
+    <section class="section-shell section-grid" id="about">
+      <div class="section-kicker">01 / ABOUT</div>
+      <div class="section-content two-column">
+        <div>
+          <p class="eyebrow">THE TEACHER</p>
+          <h2 class="section-title">Lorem ipsum<br><em>dolor sit.</em></h2>
+        </div>
+        <div class="copy-stack">
+          <p class="large-copy">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean faucibus, nibh non pretium dignissim, lorem magna sollicitudin nisi, non gravida erat arcu sed sem.</p>
+          <div class="stat-row">
+            <div><strong>01</strong><span>Personal approach</span></div>
+            <div><strong>02</strong><span>Speaking focus</span></div>
+            <div><strong>03</strong><span>B2-level path</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-section" data-cursor-theme="dark" id="method">
+      <div class="section-shell">
+        <div class="section-grid">
+          <div class="section-kicker">02 / METHOD</div>
+          <div class="section-content">
+            <p class="eyebrow">HOW IT FEELS</p>
+            <h2 class="section-title wide">A calm system<br><em>for better English.</em></h2>
+            <p class="section-lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+
+            <div class="feature-list">
+              <article class="feature-row magnetic-card">
+                <span class="feature-number">01</span>
+                <div><h3>Speak first</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div>
+                <span class="feature-arrow">↗</span>
+              </article>
+              <article class="feature-row magnetic-card">
+                <span class="feature-number">02</span>
+                <div><h3>Understand why</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div>
+                <span class="feature-arrow">↗</span>
+              </article>
+              <article class="feature-row magnetic-card">
+                <span class="feature-number">03</span>
+                <div><h3>Practice naturally</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div>
+                <span class="feature-arrow">↗</span>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell section-grid" id="lessons">
+      <div class="section-kicker">03 / LESSONS</div>
+      <div class="section-content">
+        <p class="eyebrow">SELECT A PATH</p>
+        <h2 class="section-title">Lorem ipsum<br><em>for every goal.</em></h2>
+
+        <div class="lesson-grid">
+          <article class="lesson-card magnetic-card">
+            <img class="lesson-image" data-cursor-theme="light" data-image="lessonOne" src="assets/images/lesson-placeholder-1.svg" alt="Conversation lesson illustration" loading="lazy">
+            <div class="card-icon">A</div>
+            <div class="card-meta">01 / CONVERSATION</div>
+            <h3>Lorem ipsum dolor</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.</p>
+            <a href="#contact" class="card-link magnetic-target">Explore <span>↗</span></a>
+          </article>
+          <article class="lesson-card magnetic-card dark-card" data-cursor-theme="dark">
+            <img class="lesson-image" data-cursor-theme="light" data-image="lessonTwo" src="assets/images/lesson-placeholder-2.svg" alt="Grammar lesson illustration" loading="lazy">
+            <div class="card-icon">B</div>
+            <div class="card-meta">02 / GRAMMAR</div>
+            <h3>Praesent commodo</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.</p>
+            <a href="#contact" class="card-link magnetic-target">Explore <span>↗</span></a>
+          </article>
+          <article class="lesson-card magnetic-card accent-card">
+            <img class="lesson-image" data-cursor-theme="light" data-image="lessonThree" src="assets/images/lesson-placeholder-3.svg" alt="Speaking lesson illustration" loading="lazy">
+            <div class="card-icon">C</div>
+            <div class="card-meta">03 / SPEAKING</div>
+            <h3>Viverra mauris</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.</p>
+            <a href="#contact" class="card-link magnetic-target">Explore <span>↗</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="quote-section" id="testimonials">
+      <div class="section-shell section-grid">
+        <div class="section-kicker">04 / TESTIMONIALS</div>
+        <div class="quote-wrap">
+          <p class="eyebrow">STUDENT VOICES</p>
+          <blockquote>“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error.”</blockquote>
+          <div class="quote-author"><span class="avatar"></span><span>Lorem Ipsum<br><small>Student</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell section-grid" id="faq">
+      <div class="section-kicker">05 / FAQ</div>
+      <div class="section-content faq-list">
+        <details open>
+          <summary><span>01</span> Lorem ipsum dolor sit amet?</summary>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur non mauris vitae lorem faucibus tincidunt.</p>
+        </details>
+        <details>
+          <summary><span>02</span> Consectetur adipiscing elit?</summary>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur non mauris vitae lorem faucibus tincidunt.</p>
+        </details>
+        <details>
+          <summary><span>03</span> Sed do eiusmod tempor?</summary>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur non mauris vitae lorem faucibus tincidunt.</p>
+        </details>
+        <details>
+          <summary><span>04</span> Ut labore et dolore?</summary>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur non mauris vitae lorem faucibus tincidunt.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="contact-section" data-cursor-theme="dark" id="contact">
+      <div class="section-shell contact-inner">
+        <p class="eyebrow">06 / CONTACT</p>
+        <h2 class="display-title contact-title">Ready to<br><span>speak?</span></h2>
+        <p class="contact-copy">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper nulla non metus auctor fringilla.</p>
+        <a class="big-cta magnetic-target" href="mailto:hello@example.com">hello@example.com <span>↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-cursor-theme="dark">
+    <div class="section-shell footer-inner">
+      <span>TEACH / B2</span>
+      <span>© <span id="year"></span> / PORTFOLIO</span>
+      <a href="#top" class="magnetic-target">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <aside class="mascot" aria-label="English practice companion" hidden>
+    <div class="mascot-bubble" id="mascot-bubble" role="status" aria-live="polite" aria-atomic="true"></div>
+    <button class="mascot-button" type="button" aria-label="Pause owl and show an English phrase" aria-describedby="mascot-hint" aria-controls="mascot-bubble" aria-expanded="false" data-cursor-theme="light">
+      <img src="assets/images/owl-mascot.svg" width="76" height="84" alt="" draggable="false">
+    </button>
+    <span class="mascot-hint" id="mascot-hint">Tap for a little English</span>
+    <div class="mascot-controls">
+      <button class="mascot-motion" type="button" aria-label="Pause companion movement" aria-pressed="false">Ⅱ</button>
+      <button class="mascot-dismiss" type="button" aria-label="Hide English companion">×</button>
+    </div>
+  </aside>
+
+  <script src="data/content.js"></script>
+  <script src="data/mascot-phrases.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
