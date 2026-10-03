@@ -20,8 +20,9 @@
   <div class="cursor cursor-dot" aria-hidden="true"></div>
   <div class="cursor cursor-ring" aria-hidden="true"></div>
 
+
   <header class="site-header" data-cursor-theme="light" id="top">
-    <a class="brand magnetic-target" href="#top" aria-label="Teacher home">TEACH / B2</a>
+    <a class="brand magnetic-target" href="#" aria-label="Teacher home">TEACH / B2</a>
 
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a class="nav-link magnetic-target" href="#about">About</a>
@@ -39,10 +40,12 @@
 
   </header>
 
+
+
   <dialog class="mobile-menu" id="mobile-menu" aria-labelledby="menu-title">
     <div class="menu-heading">
       <span id="menu-title" class="eyebrow">LET’S FIND YOUR PATH</span>
-      <button class="menu-close" type="button" aria-label="Close navigation">×</button>
+      <button class="menu-close" type="button" aria-label="Close navigation"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
     <nav aria-label="Mobile navigation">
       <a href="#about"><span>01</span> About <span aria-hidden="true">↗</span></a>
@@ -80,8 +83,7 @@
 
     <section class="marquee-band" aria-label="Language, confidence, conversation, progress">
       <div class="marquee-track" aria-hidden="true">
-        <span>LANGUAGE</span><span>CONFIDENCE</span><span>CONVERSATION</span><span>PROGRESS</span>
-        <span>LANGUAGE</span><span>CONFIDENCE</span><span>CONVERSATION</span><span>PROGRESS</span>
+        <div class="marquee-group"><span>LANGUAGE</span><span>CONFIDENCE</span><span>CONVERSATION</span><span>PROGRESS</span></div>
       </div>
     </section>
 
@@ -166,6 +168,14 @@
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.</p>
             <a href="#contact" class="card-link magnetic-target">Explore <span>↗</span></a>
           </article>
+          <article class="lesson-card magnetic-card">
+            <img class="lesson-image" data-cursor-theme="light" data-image="lessonThree" src="assets/images/lesson-placeholder-3.svg" alt="Speaking lesson illustration" loading="lazy">
+            <div class="card-icon">D</div>
+            <div class="card-meta">04 / SPEAKING</div>
+            <h3>Viverra mauris</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.</p>
+            <a href="#contact" class="card-link magnetic-target">Explore <span>↗</span></a>
+          </article>
         </div>
       </div>
     </section>
@@ -217,21 +227,59 @@
     <div class="section-shell footer-inner">
       <span>TEACH / B2</span>
       <span>© <span id="year"></span> / PORTFOLIO</span>
-      <a href="#top" class="magnetic-target">Back to top ↑</a>
+      <a href="#" class="magnetic-target">Back to top ↑</a>
     </div>
   </footer>
 
-  <aside class="mascot" aria-label="English practice companion" hidden>
+  
+  <aside class="mascot" id="dog-companion" aria-label="English practice companion" hidden>
     <div class="mascot-bubble" id="mascot-bubble" role="status" aria-live="polite" aria-atomic="true"></div>
-    <button class="mascot-button" type="button" aria-label="Pause owl and show an English phrase" aria-describedby="mascot-hint" aria-controls="mascot-bubble" aria-expanded="false" data-cursor-theme="light">
-      <img src="assets/images/owl-mascot.svg" width="76" height="84" alt="" draggable="false">
+    <button class="mascot-button" type="button" aria-label="Pet the dog and show an English phrase" aria-describedby="mascot-hint" aria-controls="mascot-bubble" aria-expanded="false" data-cursor-theme="light">
+      <svg class="dog-art" viewBox="0 0 140 180" width="112" height="144" aria-hidden="true">
+        <ellipse cx="70" cy="173" rx="41" ry="5" fill="#121212" opacity=".12"/>
+        <g stroke="#9b601e" stroke-width="2.5" stroke-linejoin="round">
+          <path class="dog-tail" d="M99 132c33-3 35-29 24-32-9-2-4 19-26 17" fill="#eab75e"/>
+          <g class="dog-leg dog-leg-left"><path d="m48 137-3 26c-13 0-16 9-7 10h24l4-36" fill="#eab75e"/><path d="M44 167v5m8-5v5" fill="none"/></g> <!--#eab75e-->
+          <g class="dog-leg dog-leg-right"><path d="m75 137 3 36h24c9-1 6-10-7-10l-3-26" fill="#eab75e"/><path d="M87 167v5m8-5v5" fill="none"/></g>
+          <path d="M47 91c-12 18-14 46-5 59 10 11 46 12 57-1 9-12 6-39-7-58" fill="#edbc69"/>
+          <path d="M61 101c-9 11-13 29-9 39 4 8 30 8 35 0 4-10-2-29-9-39" fill="#ffe0a0" stroke="none"/>
+          <path class="dog-arm dog-arm-left" d="M46 100c-14 5-22 23-16 31 7 7 16-1 24-17" fill="#edbc69"/>
+          <path class="dog-arm dog-arm-right" d="M92 99c12-6 14-17 13-27-1-8 10-12 14-4 9 19-4 41-20 48" fill="#edbc69"/>
+          <path d="M43 37C18 24 13 46 18 68c3 16 18 16 25-2m54-29c25-13 30 9 25 31-3 16-18 16-25-2" fill="#ce903c"/>
+          <path d="M37 47c0-21 13-33 33-33s34 12 34 33v26c0 21-15 32-34 32S36 94 36 73Z" fill="#d7f36b"/> <!--#f0c574-->
+          <path d="m57 19 5-10 9 8 10-8 4 13" fill="#f0c574"/>
+          <ellipse cx="53" cy="54" rx="17" ry="20" fill="#fffdf7"/>
+          <ellipse cx="87" cy="52" rx="18" ry="21" fill="#fffdf7"/>
+          <g class="dog-pupil" data-eye-x="53" data-eye-y="55"><circle cx="53" cy="55" r="8" fill="#252322" stroke="none"/><circle cx="50" cy="52" r="2.5" fill="white" stroke="none"/></g>
+          <g class="dog-pupil" data-eye-x="87" data-eye-y="53"><circle cx="87" cy="53" r="8" fill="#252322" stroke="none"/><circle cx="84" cy="50" r="2.5" fill="white" stroke="none"/></g>
+          <ellipse cx="70" cy="79" rx="24" ry="17" fill="#ffe3ad"/>
+          <path d="M61 70q9-7 18 0-1 11-9 11t-9-11" fill="#443127"/>
+          <path d="M57 86q13 15 26-1" fill="#75422c"/>
+          <path class="dog-tongue" d="M66 90v7c1 8 10 8 12 0v-8" fill="#f59397" stroke="#a65b58" stroke-width="1.5"/>
+          <path d="M43 99q27 12 54-1l-2 9q-26 12-50-1Z" fill="#d7f36b"/>
+          <circle cx="71" cy="111" r="7" fill="#fff0bd"/><path d="m68 111 2 2 4-5" fill="none" stroke-width="1.5"/>
+        </g>
+      </svg>
     </button>
-    <span class="mascot-hint" id="mascot-hint">Tap for a little English</span>
+    <span class="mascot-hint" id="mascot-hint">Pet me · drag me</span>
     <div class="mascot-controls">
-      <button class="mascot-motion" type="button" aria-label="Pause companion movement" aria-pressed="false">Ⅱ</button>
-      <button class="mascot-dismiss" type="button" aria-label="Hide English companion">×</button>
+      <button class="mascot-motion" type="button" aria-label="Pause companion animation" aria-pressed="false">Ⅱ</button>
+      <button class="mascot-home" type="button" aria-label="Send the dog to its house">⌂</button>
     </div>
   </aside>
+
+  <button class="doghouse" type="button" aria-label="Call the dog out of its house" aria-controls="dog-companion" aria-expanded="false" hidden>
+    <svg viewBox="0 0 100 100" width="80" height="80" aria-hidden="true">
+      <path d="M16 44h68v48H16Z" fill="#e3b575" stroke="#795435" stroke-width="2.5"/>
+      <path d="m6 45 44-36 44 36-8 9-36-29-36 29Z" fill="#a86143" stroke="#795435" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M36 92V65a14 14 0 0 1 28 0v27" fill="#4a3529"/>
+      <path d="M22 61h8m-8 13h8m40-13h8m-8 13h8" stroke="#c58e55" stroke-width="2"/>
+      <rect x="39" y="30" width="22" height="12" rx="6" fill="#fff0c7"/>
+      <path d="M44 36h12" stroke="#795435" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span class="doghouse-label">Come out!</span>
+  </button>
+
 
   <script src="data/content.js"></script>
   <script src="data/mascot-phrases.js"></script>

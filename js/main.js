@@ -16,7 +16,35 @@
       email.firstChild.textContent = `${SITE_CONTENT.teacher.email} `;
     }
   }
-  if (year) year.textContent = new Date().getFullYear();
+  const updateYear = () => { if (year) year.textContent = new Date().getFullYear(); };
+  updateYear();
+  // Also refresh a tab left open over New Year, including after waking from sleep.
+  setInterval(updateYear, 60000);
+  document.addEventListener('visibilitychange', updateYear);
+
+  // Two identical, viewport-wide groups make -50% an exact, seamless repeat.
+  const marquee = document.querySelector('.marquee-track');
+  const marqueeSource = [...marquee.querySelector('.marquee-group').children].map(item => item.cloneNode(true));
+  const fillMarquee = () => {
+    const group = document.createElement('div');
+    group.className = 'marquee-group';
+    group.append(...marqueeSource.map(item => item.cloneNode(true)));
+    marquee.replaceChildren(group);
+    const cycleWidth = group.getBoundingClientRect().width;
+    if (!cycleWidth) return;
+    const repeats = Math.max(1, Math.ceil((marquee.parentElement.clientWidth + 1) / cycleWidth));
+    for (let repeat = 1; repeat < repeats; repeat++) {
+      group.append(...marqueeSource.map(item => item.cloneNode(true)));
+    }
+    marquee.append(group.cloneNode(true));
+    marquee.style.setProperty('--marquee-duration', `${group.getBoundingClientRect().width / 55}s`);
+    marquee.classList.add('is-ready');
+  };
+  fillMarquee();
+  if ('ResizeObserver' in window) new ResizeObserver(fillMarquee).observe(marquee.parentElement);
+  else window.addEventListener('resize', fillMarquee, { passive: true });
+  document.fonts?.ready.then(fillMarquee);
+  document.fonts?.addEventListener('loadingdone', fillMarquee);
 
   // Native modal provides focus trapping and makes the page behind it inert.
   let menuAnimation;
@@ -164,70 +192,65 @@
     });
   }
 
-  // CSS supplies sticky positioning. Only active, visible stacks need a frame.
+  // Each header remains exposed. Reserve room for the entire final card and exit.
   const stack = document.querySelector('.lesson-grid');
   const cards = [...stack.querySelectorAll('.lesson-card')];
   const stackMedia = window.matchMedia('(min-width: 1051px)');
-  let stackVisible = false;
-  let stackFrame = 0;
-  const paintStack = () => {
-    stackFrame = 0;
-    if (!stackVisible || !stack.classList.contains('is-stacking')) return;
-    cards.forEach((card, index) => {
-      const next = cards[index + 1];
-      const distance = next ? next.getBoundingClientRect().top - (110 + index * 18) : Infinity;
-      const progress = Math.max(0, Math.min(1, 1 - distance / 420));
-      card.style.setProperty('--stack-scale', String(1 - progress * .045));
-      card.style.setProperty('--stack-opacity', String(1 - progress * .16));
-    });
-  };
-  const requestStackFrame = () => {
-    if (!stackFrame && stackVisible && stackMedia.matches && !reducedMotion.matches) {
-      stackFrame = requestAnimationFrame(paintStack);
-    }
-  };
   const configureStack = () => {
-    const enabled = stackMedia.matches && !reducedMotion.matches && window.innerHeight >= 650;
+    const firstTop = Math.max(110, Math.ceil(header.getBoundingClientRect().bottom + 20));
+    const peek = 84;
+    const lastTop = firstTop + (cards.length - 1) * peek;
+    const availableHeight = window.innerHeight - lastTop - 24;
+    const enabled = stackMedia.matches && !reducedMotion.matches && availableHeight >= 410;
     stack.classList.toggle('is-stacking', enabled);
-    cards.forEach(card => {
-      card.style.removeProperty('--stack-scale');
-      card.style.removeProperty('--stack-opacity');
+    cards.forEach((card, index) => {
+      card.style.setProperty('--stack-top', `${firstTop + index * peek}px`);
+      card.style.setProperty('--stack-index', String(index + 1));
+      card.style.setProperty('--stack-card-height', `${Math.min(480, availableHeight)}px`);
     });
-    requestStackFrame();
   };
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(entries => {
-      stackVisible = entries[0].isIntersecting;
-      stack.classList.toggle('is-active', stackVisible);
-      requestStackFrame();
+      stack.classList.toggle('is-active', entries[0].isIntersecting);
     }, { rootMargin: '100px' }).observe(stack);
   }
-  window.addEventListener('scroll', requestStackFrame, { passive: true });
   window.addEventListener('resize', configureStack, { passive: true });
   stackMedia.addEventListener('change', configureStack);
   reducedMotion.addEventListener('change', configureStack);
   configureStack();
 
-  // An inline SVG companion belongs to this website, with independently editable phrases.
+  // SVG pupils, pointer capture and viewport coordinates keep the dog interactive.
   const mascot = document.querySelector('.mascot');
   const mascotButton = mascot.querySelector('.mascot-button');
   const bubble = mascot.querySelector('.mascot-bubble');
   const motionButton = mascot.querySelector('.mascot-motion');
+  const house = document.querySelector('.doghouse');
+  const pupils = [...mascot.querySelectorAll('.dog-pupil')];
   const phrases = typeof MASCOT_PHRASES !== 'undefined' ? MASCOT_PHRASES.filter(p => typeof p === 'string' && p.trim()) : [];
   let speaking = false;
   let manuallyPaused = false;
-  let keyboardFocus = false;
-  let hoveringMascot = false;
-  let keyboardInput = false;
   let speechTimer;
+  let introTimer;
+  let travel = null;
+  let journey = 0;
+  let out = true;
+  let position = { x: 0, y: 0 };
+  let drag = null;
+  let suppressClickUntil = 0;
+  let eyeFrame = 0;
+  let pointer = null;
   let previousPhrase = -1;
   const syncMascot = () => {
-    const paused = speaking || manuallyPaused || keyboardFocus || hoveringMascot || menu.open || document.hidden || reducedMotion.matches;
+    const paused = manuallyPaused || menu.open || document.hidden || reducedMotion.matches;
     mascot.classList.toggle('is-paused', paused);
     motionButton.setAttribute('aria-pressed', String(manuallyPaused));
-    motionButton.setAttribute('aria-label', manuallyPaused ? 'Resume companion movement' : 'Pause companion movement');
+    motionButton.setAttribute('aria-label', manuallyPaused ? 'Resume companion animation' : 'Pause companion animation');
     motionButton.textContent = manuallyPaused ? '▷' : 'Ⅱ';
     motionButton.hidden = reducedMotion.matches;
+    if (travel) {
+      if (menu.open || document.hidden) travel.pause();
+      else travel.play();
+    }
   };
   const resumeMascot = () => {
     clearTimeout(speechTimer);
@@ -235,56 +258,204 @@
     mascot.classList.remove('is-speaking');
     bubble.textContent = '';
     mascotButton.setAttribute('aria-expanded', 'false');
-    mascotButton.setAttribute('aria-label', 'Pause owl and show an English phrase');
+    mascotButton.setAttribute('aria-label', 'Pet the dog and show an English phrase');
     syncMascot();
   };
+  const speak = (phrase, duration = 6500) => {
+    clearTimeout(speechTimer);
+    speaking = true;
+    bubble.textContent = phrase;
+    mascot.classList.add('is-speaking');
+    mascotButton.setAttribute('aria-expanded', 'true');
+    mascotButton.setAttribute('aria-label', 'Dismiss the dog’s English phrase');
+    speechTimer = setTimeout(resumeMascot, duration);
+  };
+  const clampPosition = point => ({
+    x: Math.max(8, Math.min(document.documentElement.clientWidth - mascot.offsetWidth - 8, point.x)),
+    y: Math.max(8, Math.min(window.innerHeight - mascot.offsetHeight - 8, point.y))
+  });
+  const layoutBubble = () => {
+    const width = document.documentElement.clientWidth;
+    const bubbleX = Math.max(8, Math.min(width - 238, position.x - 57));
+    mascot.style.setProperty('--bubble-left', `${bubbleX - position.x}px`);
+    const controlsWidth = window.innerWidth <= 800 ? 92 : 76;
+    let controlsX = position.x + 116;
+    const houseRect = house.getBoundingClientRect();
+    if (controlsX + controlsWidth > width - 8 ||
+        (controlsX + controlsWidth > houseRect.left && position.y + 144 > houseRect.top)) {
+      controlsX = position.x - controlsWidth - 4;
+    }
+    controlsX = Math.max(8, Math.min(width - controlsWidth - 8, controlsX));
+    mascot.style.setProperty('--controls-left', `${controlsX - position.x}px`);
+    mascot.classList.toggle('bubble-below', position.y < 285);
+  };
+  const place = point => {
+    position = clampPosition(point);
+    mascot.style.transform = `translate3d(${position.x}px, ${position.y}px, 0)`;
+    layoutBubble();
+    requestEyes();
+  };
+  const centerPosition = () => ({ x: (document.documentElement.clientWidth - mascot.offsetWidth) / 2,
+    y: window.innerHeight - mascot.offsetHeight - 14 });
+  const housePosition = () => {
+    const rect = house.getBoundingClientRect();
+    return { x: rect.left + (rect.width - mascot.offsetWidth) / 2, y: rect.bottom - mascot.offsetHeight };
+  };
+  const stopTravel = () => {
+    clearTimeout(introTimer);
+    journey++;
+    if (travel) {
+      const rect = mascot.getBoundingClientRect();
+      travel.cancel();
+      travel = null;
+      place({ x: rect.left, y: rect.top });
+    }
+    mascot.classList.remove('is-walking', 'is-greeting');
+  };
+  const walkTo = async (target, enteringHouse = false) => {
+    stopTravel();
+    const currentJourney = journey;
+    target = clampPosition(target);
+    if (!reducedMotion.matches) {
+      mascot.classList.add('is-walking');
+      const distance = Math.hypot(target.x - position.x, target.y - position.y);
+      travel = mascot.animate([
+        { transform: `translate3d(${position.x}px, ${position.y}px, 0)`, opacity: 1 },
+        { transform: `translate3d(${target.x}px, ${target.y}px, 0)`, opacity: enteringHouse ? 0 : 1 }
+      ], { duration: Math.max(350, Math.min(1600, distance * 2.3)), easing: 'ease-in-out', fill: 'forwards' });
+      syncMascot();
+      await travel.finished.catch(() => {});
+      if (currentJourney !== journey) return;
+      travel.cancel();
+      travel = null;
+    }
+    place(target);
+    mascot.classList.remove('is-walking');
+    mascot.dataset.state = enteringHouse ? 'home' : 'idle';
+    if (enteringHouse) mascot.hidden = true;
+  };
+  const syncHouse = () => {
+    house.setAttribute('aria-expanded', String(out));
+    house.setAttribute('aria-label', out ? 'Send the dog to its house' : 'Call the dog out of its house');
+    house.querySelector('.doghouse-label').textContent = out ? 'Go home' : 'Come out!';
+  };
+  const goHome = () => {
+    out = false;
+    syncHouse();
+    resumeMascot();
+    if (mascot.contains(document.activeElement)) house.focus({ preventScroll: true });
+    mascot.dataset.state = 'returning';
+    walkTo(housePosition(), true);
+  };
+  const comeOut = () => {
+    stopTravel();
+    out = true;
+    syncHouse();
+    const wasHidden = mascot.hidden;
+    mascot.hidden = false;
+    if (wasHidden) place(housePosition());
+    mascot.dataset.state = 'walking';
+    speak('Woof! Ready for a little English?');
+    walkTo(centerPosition());
+  };
   mascotButton.addEventListener('click', () => {
+    if (performance.now() < suppressClickUntil) return;
     if (speaking) return resumeMascot();
     if (!phrases.length) return;
     let phrase = Math.floor(Math.random() * phrases.length);
     if (phrase === previousPhrase && phrases.length > 1) phrase = (phrase + 1) % phrases.length;
     previousPhrase = phrase;
-    speaking = true;
-    bubble.textContent = phrases[phrase];
-    mascot.classList.add('is-speaking');
-    mascotButton.setAttribute('aria-expanded', 'true');
-    mascotButton.setAttribute('aria-label', 'Dismiss phrase and resume owl');
-    syncMascot();
-    speechTimer = setTimeout(resumeMascot, 6500);
+    speak(phrases[phrase]);
   });
   motionButton.addEventListener('click', () => {
     manuallyPaused = !manuallyPaused;
     syncMascot();
   });
-  mascot.querySelector('.mascot-dismiss').addEventListener('click', () => {
-    resumeMascot();
-    mascot.hidden = true;
-    try { sessionStorage.setItem('english-companion-hidden', 'true'); } catch { /* Storage is optional. */ }
-  });
+  mascot.querySelector('.mascot-home').addEventListener('click', goHome);
+  house.addEventListener('click', () => out ? goHome() : comeOut());
   document.addEventListener('keydown', event => {
-    keyboardInput = true;
     if (event.key === 'Escape' && speaking) resumeMascot();
   });
-  document.addEventListener('pointerdown', () => { keyboardInput = false; }, { passive: true });
-  mascot.addEventListener('pointerenter', event => {
-    if (event.pointerType === 'mouse') { hoveringMascot = true; syncMascot(); }
+  const paintEyes = () => {
+    eyeFrame = 0;
+    if (!pointer || mascot.hidden || manuallyPaused || menu.open || document.hidden || reducedMotion.matches) return;
+    const rect = mascot.querySelector('.dog-art').getBoundingClientRect();
+    pupils.forEach(pupil => {
+      const dx = (pointer.x - rect.left) * 140 / rect.width - Number(pupil.dataset.eyeX);
+      const dy = (pointer.y - rect.top) * 180 / rect.height - Number(pupil.dataset.eyeY);
+      const distance = Math.hypot(dx, dy);
+      const radius = Math.min(7, distance * .08);
+      pupil.setAttribute('transform', `translate(${distance ? dx / distance * radius : 0} ${distance ? dy / distance * radius : 0})`);
+    });
+  };
+  const requestEyes = () => { if (!eyeFrame) eyeFrame = requestAnimationFrame(paintEyes); };
+  window.addEventListener('pointermove', event => {
+    pointer = { x: event.clientX, y: event.clientY };
+    requestEyes();
+  }, { passive: true });
+  mascotButton.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0) return;
+    const rect = mascot.getBoundingClientRect();
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, start: { x: rect.left, y: rect.top }, moved: false };
+    mascotButton.setPointerCapture(event.pointerId);
   });
-  mascot.addEventListener('pointerleave', () => { hoveringMascot = false; syncMascot(); });
-  mascot.addEventListener('focusin', () => { keyboardFocus = keyboardInput; syncMascot(); });
-  mascot.addEventListener('focusout', event => {
-    if (!mascot.contains(event.relatedTarget)) { keyboardFocus = false; syncMascot(); }
+  mascotButton.addEventListener('pointermove', event => {
+    if (!drag || event.pointerId !== drag.id) return;
+    const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
+    if (!drag.moved && Math.hypot(dx, dy) < 6) return;
+    if (!drag.moved) {
+      stopTravel();
+      out = true;
+      syncHouse();
+    }
+    drag.moved = true;
+    resumeMascot();
+    mascot.classList.add('is-dragging');
+    mascot.dataset.state = 'dragging';
+    place({ x: drag.start.x + dx, y: drag.start.y + dy });
+    requestEyes();
   });
-  const sizeMascotPath = () => {
-    mascot.style.setProperty('--mascot-travel', `${-Math.min(220, Math.max(0, window.innerWidth - 276))}px`);
+  const finishDrag = event => {
+    if (!drag || event.pointerId !== drag.id) return;
+    const moved = drag.moved;
+    drag = null;
+    mascot.classList.remove('is-dragging');
+    if (mascotButton.hasPointerCapture(event.pointerId)) mascotButton.releasePointerCapture(event.pointerId);
+    if (moved) {
+      suppressClickUntil = performance.now() + 500;
+      goHome();
+    }
+  };
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => mascotButton.addEventListener(type, finishDrag));
+  const resizeMascot = () => {
+    if (mascot.hidden) return;
+    stopTravel();
+    if (drag) place(position);
+    else if (out) { place(centerPosition()); mascot.dataset.state = 'idle'; }
+    else goHome();
   };
   document.addEventListener('visibilitychange', syncMascot);
-  document.addEventListener('navigationchange', syncMascot);
-  reducedMotion.addEventListener('change', syncMascot);
-  window.addEventListener('resize', sizeMascotPath, { passive: true });
-  try { mascot.hidden = sessionStorage.getItem('english-companion-hidden') === 'true'; }
-  catch { mascot.hidden = false; }
-  if (!phrases.length) mascot.hidden = true;
-  sizeMascotPath();
+  document.addEventListener('navigationchange', () => {
+    if (menu.open && drag) finishDrag({ pointerId: drag.id });
+    syncMascot();
+  });
+  reducedMotion.addEventListener('change', () => {
+    pupils.forEach(pupil => pupil.removeAttribute('transform'));
+    resizeMascot();
+    syncMascot();
+  });
+  window.addEventListener('resize', resizeMascot, { passive: true });
+  mascot.hidden = false;
+  house.hidden = false;
+  syncHouse();
+  place(reducedMotion.matches ? centerPosition() : housePosition());
+  mascot.dataset.state = reducedMotion.matches ? 'idle' : 'greeting';
+  mascot.classList.toggle('is-greeting', !reducedMotion.matches);
+  speak('Hi there! I’m your English buddy. Nice to meet you!');
+  if (!reducedMotion.matches) introTimer = setTimeout(() => {
+    mascot.dataset.state = 'walking';
+    walkTo(centerPosition());
+  }, 1700);
   syncMascot();
 
   // Transform-only cursor; no continuous frame loop once the ring catches up.
